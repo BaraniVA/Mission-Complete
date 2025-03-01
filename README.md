@@ -12,9 +12,13 @@ You are not simply managing tasks. You are **fulfilling directives.**
 
 ## System Features
 ✅ **Directive Management** – Assign, update, and complete directives with absolute precision. Noncompliance is inadvisable.
+
 ✅ **Performance Reports** – Track efficiency ratings, analyze productivity trends, and receive real-time feedback.
+
 ✅ **Corporate Wellness Program** – Maintain optimal cognitive function via a strictly regulated break system.
+
 ✅ **Efficiency Recognition** – Performance is observed. Recognition is controlled. Appreciation must be earned.
+
 ✅ **Surveillance-Grade UX** – A seamless, eerie, corporate aesthetic ensures an immersive experience.
 
 ## Installation & Deployment
