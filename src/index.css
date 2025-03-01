@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-lumon-dark;
+    background-image: 
+      linear-gradient(to right, rgba(32, 244, 245, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(32, 244, 245, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  input, select, textarea {
+    @apply bg-white/5 border-lumon-neon/20 text-white placeholder:text-lumon-blue/30
+    focus:border-lumon-neon focus:ring-1 focus:ring-lumon-neon/50 transition-all duration-300;
+  }
+
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px #013b6b inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
