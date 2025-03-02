@@ -1,6 +1,7 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { Building2, Layout, CheckSquare, BarChart2, Gift, Settings } from 'lucide-react';
+import { Building2, Layout, CheckSquare, BarChart2, Gift, Settings, Menu, X } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useState } from 'react';
 
 const navigation = [
   { name: 'Dashboard', icon: Layout, href: '/dashboard' },
@@ -12,6 +13,11 @@ const navigation = [
 
 const AppLayout = () => {
   const terminalId = Math.random().toString(36).substr(2, 9).toUpperCase();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(prev => !prev);
+  };
 
   return (
     <div className="min-h-screen bg-lumon-dark text-white flex flex-col">
@@ -29,10 +35,22 @@ const AppLayout = () => {
 
       <div className="flex-1 flex">
         {/* Sidebar */}
-        <div className="hidden md:flex md:flex-col md:w-64 bg-lumon-dark/80 border-r border-lumon-neon/10">
+        <div
+          className={cn(
+            'fixed inset-y-0 left-0 w-64 bg-lumon-dark/80 border-r border-lumon-neon/10 transform transition-transform duration-300 ease-in-out z-50',
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+            'md:transform-none md:flex md:flex-col md:static md:w-64'
+          )}
+        >
           <div className="flex items-center h-16 px-4 border-b border-lumon-neon/10">
             <Building2 className="h-8 w-8 text-lumon-neon" />
             <span className="ml-2 text-lg font-mono tracking-wider text-lumon-neon">MISSIONCOMPLETE</span>
+            <button
+              className="ml-auto md:hidden text-lumon-neon p-1" // Reduced padding
+              onClick={toggleMobileMenu}
+            >
+              <X className="h-5 w-5" /> {/* Reduced from h-6 w-6 to h-5 w-5 */}
+            </button>
           </div>
           <nav className="flex-1 px-2 py-4 space-y-1">
             {navigation.map((item) => (
@@ -46,6 +64,7 @@ const AppLayout = () => {
                     ? 'bg-lumon-neon/10 text-lumon-neon border-lumon-neon/20'
                     : 'text-lumon-neon/60 hover:bg-lumon-neon/5 hover:text-lumon-neon hover:border-lumon-neon/20'
                 )}
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.name.toUpperCase()}
@@ -60,11 +79,30 @@ const AppLayout = () => {
         </div>
 
         {/* Main content */}
-        <div className="flex-1">
-          <main className="py-6 px-4 sm:px-6 md:px-8 pb-20">
+        <div className="flex-1 flex flex-col">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex justify-between items-center p-4 border-b border-lumon-neon/10">
+            <span className="text-lg font-mono tracking-wider text-lumon-neon">MISSIONCOMPLETE</span>
+            <button
+              className="text-lumon-neon p-1" // Reduced padding
+              onClick={toggleMobileMenu}
+            >
+              {isMobileMenuOpen ? null : <Menu className="h-5 w-5" />} {/* Reduced from h-6 w-6 to h-5 w-5 */}
+            </button>
+          </div>
+
+          <main className="flex-1 py-6 px-4 sm:px-6 md:px-8 pb-20">
             <Outlet />
           </main>
         </div>
+
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={toggleMobileMenu}
+          ></div>
+        )}
       </div>
 
       {/* Footer Message */}

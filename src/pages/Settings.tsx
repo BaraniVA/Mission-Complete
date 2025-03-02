@@ -1,5 +1,5 @@
-import React from 'react';
-import { Settings as SettingsIcon, Bell, Shield, Eye, Monitor, User } from 'lucide-react';
+import { useState } from 'react';
+import { Settings as SettingsIcon, Bell, Shield, Monitor, User } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const settingSections = [
@@ -10,7 +10,7 @@ const settingSections = [
       { id: 'task-alerts', label: 'DIRECTIVE ALERTS', enabled: true },
       { id: 'performance-updates', label: 'PERFORMANCE METRICS', enabled: true },
       { id: 'compliance-warnings', label: 'COMPLIANCE WARNINGS', enabled: true, locked: true },
-    ]
+    ],
   },
   {
     title: 'SECURITY PROTOCOLS',
@@ -19,7 +19,7 @@ const settingSections = [
       { id: 'two-factor', label: 'TWO-FACTOR AUTHENTICATION', enabled: true, locked: true },
       { id: 'session-timeout', label: 'AUTO-LOGOUT (15 MINUTES)', enabled: true, locked: true },
       { id: 'activity-log', label: 'ACTIVITY MONITORING', enabled: true, locked: true },
-    ]
+    ],
   },
   {
     title: 'DISPLAY SETTINGS',
@@ -28,11 +28,31 @@ const settingSections = [
       { id: 'dark-mode', label: 'TERMINAL MODE', enabled: true, locked: true },
       { id: 'compact-view', label: 'COMPACT VIEW', enabled: false },
       { id: 'animations', label: 'INTERFACE ANIMATIONS', enabled: true },
-    ]
+    ],
   },
 ];
 
 const Settings = () => {
+  // Initialize state for settings that are enabled and not locked
+  const [settingsState, setSettingsState] = useState(() => {
+    const initialState: { [key: string]: boolean } = {};
+    settingSections.forEach(section => {
+      section.settings.forEach(setting => {
+        if (setting.enabled && !setting.locked) {
+          initialState[setting.id] = setting.enabled;
+        }
+      });
+    });
+    return initialState;
+  });
+
+  const handleToggle = (id: string) => {
+    setSettingsState(prevState => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -94,20 +114,32 @@ const Settings = () => {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={setting.enabled}
-                          disabled={setting.locked}
+                          checked={
+                            setting.enabled && !setting.locked
+                              ? settingsState[setting.id] // Use state for enabled, non-locked settings
+                              : setting.enabled // Static value for locked or disabled settings
+                          }
+                          disabled={setting.locked || !setting.enabled} // Disable if locked or not enabled
                           className="sr-only peer"
-                          onChange={() => {}}
+                          onChange={() => {
+                            if (setting.enabled && !setting.locked) {
+                              handleToggle(setting.id); // Only toggle enabled, non-locked settings
+                            }
+                          }}
                         />
-                        <div className={cn(
-                          "w-11 h-6 rounded-full peer",
-                          "border border-lumon-neon/20",
-                          "after:content-[''] after:absolute after:top-[2px] after:left-[2px]",
-                          "after:bg-lumon-neon after:rounded-full after:h-5 after:w-5",
-                          "after:transition-all peer-checked:after:translate-x-full",
-                          setting.enabled ? "bg-lumon-neon/20" : "bg-lumon-dark",
-                          setting.locked && "opacity-50 cursor-not-allowed"
-                        )}></div>
+                        <div
+                          className={cn(
+                            "w-11 h-6 rounded-full peer",
+                            "border border-lumon-neon/20",
+                            "after:content-[''] after:absolute after:top-[2px] after:left-[2px]",
+                            "after:bg-lumon-neon after:rounded-full after:h-5 after:w-5",
+                            "after:transition-all peer-checked:after:translate-x-full",
+                            setting.enabled && !setting.locked && settingsState[setting.id]
+                              ? "bg-lumon-neon/20"
+                              : "bg-lumon-dark",
+                            (setting.locked || !setting.enabled) && "opacity-50 cursor-not-allowed"
+                          )}
+                        ></div>
                       </label>
                     </div>
                   ))}

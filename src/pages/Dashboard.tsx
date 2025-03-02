@@ -29,10 +29,15 @@ const Dashboard = () => {
           <Link
             to="/tasks/new"
             className={cn(
-              "inline-flex items-center px-4 py-2 border border-lumon-neon/20 rounded-sm",
-              "text-sm font-mono tracking-wider text-lumon-neon bg-lumon-neon/5",
+              // Base styles (mobile)
+              "inline-flex items-center px-3 py-1.5 border border-lumon-neon/20 rounded-sm",
+              "text-xs font-mono tracking-wider text-lumon-neon bg-lumon-neon/5",
               "hover:bg-lumon-neon/10 hover:border-lumon-neon/30",
-              "transition-colors duration-150 ease-in-out"
+              "transition-colors duration-150 ease-in-out",
+              // Small screens (sm: ≥ 640px)
+              "sm:px-4 sm:py-2 sm:text-sm",
+              // Medium screens (md: ≥ 768px)
+              "md:px-5 md:py-2.5 md:text-base"
             )}
           >
             <Plus className="h-4 w-4 mr-2" />
