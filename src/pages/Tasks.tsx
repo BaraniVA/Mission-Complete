@@ -24,14 +24,17 @@ const Tasks = () => {
   const [showCompletion, setShowCompletion] = useState(false);
 
   const checkOverdueTasks = () => {
-    const now = Date.now(); // Get current timestamp
+    const now = new Date(); // Current date/time
+    const todayStart = new Date(now.setHours(0, 0, 0, 0)).getTime(); // Midnight of today
   
     tasks.forEach(task => {
       if (!task.dueDate || isNaN(task.dueDate)) return; // Skip invalid due dates
   
-      const taskDueDate = typeof task.dueDate === 'string' ? new Date(task.dueDate).getTime() : task.dueDate;
+      const taskDueDateRaw = typeof task.dueDate === 'string' ? new Date(task.dueDate) : new Date(task.dueDate);
+      const taskDueDateStart = new Date(taskDueDateRaw.setHours(0, 0, 0, 0)).getTime(); // Midnight of due date
   
-      if (taskDueDate < now && (task.status === 'Pending' || task.status === 'In Progress')) {
+      // Check if the task's due date day is before today and status is Pending/In Progress
+      if (taskDueDateStart < todayStart && (task.status === 'Pending' || task.status === 'In Progress')) {
         updateTaskStatus(task.id, 'Overdue');
       }
     });
